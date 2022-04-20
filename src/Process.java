@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class Process implements ProcessPoolMBean {
 
     private String name;
-    private String status;
+    private final String status;
     private final ScheduledExecutorService scheduledExecutorService;
 
     public Process() {
