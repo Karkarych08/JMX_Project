@@ -20,12 +20,15 @@ public class MainTransformer implements ClassFileTransformer {
                 ClassPool pool = ClassPool.getDefault();
                 CtClass clazz = pool.get("main.Main");
 
-                CtField StopTimeField = CtField.make("StopWatch stopWatch = new StopWatch(\"Program in work time\");",clazz);
-                clazz.addField(StopTimeField);
+                CtField startTimeField = CtField.make("private static double startTime = 0.0;",clazz);
+                clazz.addField(startTimeField);
+
+                CtField endTimeField = CtField.make("private static double endTime = 0.0;",clazz);
+                clazz.addField(endTimeField);
 
                 CtMethod StartTimer = CtMethod.make("""
-                        public static void StartTimer(String[] args) {
-                                 stopwatch.start("inizilizing");
+                        public static void StartTimer() {
+                                 startTime = System.nanoTime();
                                  System.out.println("It's work");
                              }
                         """, clazz);
@@ -33,9 +36,9 @@ public class MainTransformer implements ClassFileTransformer {
                 clazz.getDeclaredMethod("main").insertBefore("StartTimer();");
 
                 CtMethod StopTimer = CtMethod.make("""
-                        public static void StartTimer(String[] args) {
-                                 stopwatch.stop();
-                                 System.out.println(stopWatch.prettyPrint());
+                        public static void StopTimer() {
+                                 endTime = System.nanoTime();
+                                 System.out.println(endTime - startTime);
                              }
                         """, clazz);
                 clazz.addMethod(StopTimer);

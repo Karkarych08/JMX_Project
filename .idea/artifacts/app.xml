@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/app</output-path>
     <root id="archive" name="app.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="JMX_Project" />
       <element id="extracted-dir" path="$PROJECT_DIR$/.idea/libraries/javassist.jar" path-in-jar="/" />
