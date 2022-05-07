@@ -6,4 +6,8 @@ public interface ProcessPoolMBean {
     String status(String name);
 
     void cancel(String name);
+
+    void startProfiling(String name);
+
+    void stopProfiling(String name);
 }

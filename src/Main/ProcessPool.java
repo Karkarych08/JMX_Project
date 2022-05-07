@@ -1,5 +1,10 @@
 package main;
 
+import javassist.CannotCompileException;
+import javassist.NotFoundException;
+
+import java.io.IOException;
+import java.lang.instrument.IllegalClassFormatException;
 import java.util.ArrayList;
 
 public class ProcessPool implements ProcessPoolMBean{
@@ -25,7 +30,7 @@ public class ProcessPool implements ProcessPoolMBean{
         String status = null;
         for (Process process : processes) {
             if (process.getName().equals(name)) {
-                status = process.status(name);
+                status = process.status();
                 deleted = true;
             }
         }
@@ -39,12 +44,36 @@ public class ProcessPool implements ProcessPoolMBean{
         boolean deleted = false;
         for (Process process : processes) {
             if (process.getName().equals(name)) {
-                process.cancel(name);
+                process.cancel();
                 processes.remove(process);
                 deleted = true;
             }
         }
         if (!(deleted))
             System.out.println("No such process");
+    }
+
+    @Override
+    public void startProfiling(String name) {
+        for (Process process : processes) {
+            if (process.getName().equals(name)) {
+                try {
+                    if (!(process.isProfiled))
+                    process.startProfiling();
+                } catch (NotFoundException | IOException | CannotCompileException | IllegalClassFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void stopProfiling(String name) {
+        for (Process process : processes) {
+            if (process.getName().equals(name)) {
+                if (process.isProfiled)
+                    process.stopProfiling();
+            }
+        }
     }
 }

@@ -16,9 +16,8 @@ public class MainTransformer implements ClassFileTransformer {
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) throws IllegalClassFormatException {
         try{
-            if ("main/Main".equals(className)){
                 ClassPool pool = ClassPool.getDefault();
-                CtClass clazz = pool.get("main.Main");
+                CtClass clazz = pool.get(className);
 
                 CtField startTimeField = CtField.make("private static double startTime = 0.0;",clazz);
                 clazz.addField(startTimeField);
@@ -33,7 +32,7 @@ public class MainTransformer implements ClassFileTransformer {
                              }
                         """, clazz);
                 clazz.addMethod(StartTimer);
-                clazz.getDeclaredMethod("main").insertBefore("StartTimer();");
+                clazz.getDeclaredMethod("run").insertBefore("StartTimer();");
 
                 CtMethod StopTimer = CtMethod.make("""
                         public static void StopTimer() {
@@ -42,12 +41,9 @@ public class MainTransformer implements ClassFileTransformer {
                              }
                         """, clazz);
                 clazz.addMethod(StopTimer);
-                clazz.getDeclaredMethod("main").insertAfter("StopTimer();");
+                clazz.getDeclaredMethod("run").insertAfter("StopTimer();");
 
                 return clazz.toBytecode();
-            }else {
-                return classfileBuffer;
-            }
         } catch (NotFoundException | CannotCompileException | IOException e) {
             e.printStackTrace();
             throw new RuntimeException();
