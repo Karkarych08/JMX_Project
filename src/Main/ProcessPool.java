@@ -6,6 +6,7 @@ import javassist.NotFoundException;
 import java.io.IOException;
 import java.lang.instrument.IllegalClassFormatException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ProcessPool implements ProcessPoolMBean{
 
@@ -69,7 +70,8 @@ public class ProcessPool implements ProcessPoolMBean{
 
     @Override
     public void stopProfiling(String name) {
-        for (Process process : processes) {
+        for (Iterator<Process> iterator = processes.iterator(); iterator.hasNext(); ) {
+            Process process = iterator.next();
             if (process.getName().equals(name)) {
                 if (process.isProfiled)
                     process.stopProfiling();
